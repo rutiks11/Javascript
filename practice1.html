@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    
+    <style>
+        header {
+            background-color:  rgb(53, 49, 49);
+            color: orangered;
+            padding: 10px;
+            border: 2px solid grey;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        body {
+            background-color: rgb(208, 208, 208);
+        }
+
+        footer {
+            background-color: rgb(53, 49, 49);
+            color: orangered;
+            padding: 10px;
+            border: 2px solid grey;
+            border-radius: 10px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        button {
+            background-color: honeydew;
+            color: orangered;
+            padding: 5px;
+            border: 2px solid crimson;
+            border-radius: 10px;
+            box-shadow: cadetblue;
+            margin: 10px;
+        }
+        
+    </style>
+
+    <script src="./script/jquery.js"></script>
+
+    <script>
+
+        function displayTable(result1) {
+            var str = "<table border=2 solid black><tr class='tableheader'><th>Id</th><th>Name</th><th>Salary</th><th>Age</th></tr>"
+
+            for( p of result1) {
+                str += `<tr><td>${p.id}</td><td>${p.employee_name}</td><td>${p.employee_salary}</td><td>${p.employee_age}</td></tr>`;
+            }
+
+            str += "</table>";
+            $("#mydiv").html(str);
+        }
+
+        function displaydata(ob)
+        {
+            var str=`userId : ${ob.data.id} <br> Employee Name : ${ob.data.employee_name} <br> Employee Age: ${ob.data.employee_age} <br> Employee Salary : ${ob.data.employee_salary}`
+            $('#onepost').html(str);
+        }
+
+        function sendRequest()
+        {
+            var id = $('#id option:selected').val();
+            console.log(id);
+            $.ajax({
+                url : "https://dummy.restapiexample.com/api/v1/employee/"+id,
+                type: 'GET',
+                success:function(result){
+                    displaydata(result);
+                },
+                error:function(error)
+                {
+                    console.log(error)
+                }
+            }
+            )      
+        }
+
+        function displayDropdown(result)
+        {
+            var str = "<select id='id' name='id'>"
+            
+                for(var p of result.data)
+                {
+                    console.log("In dropdownLIst")
+                    str += `<option value='${p.id}'>${p.id}</option>`
+                }
+            str+= "</select>"
+            $('#dropdown').html(str);
+
+            $('#id').change(function(){
+                sendRequest(result)
+            })
+        }
+
+        $(document).ready(function () {
+
+            $('#btn').click(function(){
+                $.ajax({
+                    url: "https://dummy.restapiexample.com/api/v1/employees",
+                    type: "GET",
+                    success: function(result) {
+                        console.log(result.data)
+                        displayTable(result.data);
+                        displayDropdown(result);
+                    },
+                    error: function (err) {
+                        console.log(err)
+                    }
+
+                })
+            })
+
+        })
+
+    </script>
+</head>
+
+<body>
+    <header>
+        <h1>AJAX using JQuery</h1>
+    </header>
+    <button name="btn" id="btn">Get Data</button>
+    <div id="dropdown"></div>
+    <div id="onepost" style="margin: 10px;"></div>
+    <div id="mydiv"></div>
+    <footer>@copyrights</footer>
+
+</body>
+
+</html>
