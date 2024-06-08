@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    
+
     <style>
         header {
-            background-color:  rgb(53, 49, 49);
+            background-color: rgb(53, 49, 49);
             color: orangered;
             padding: 10px;
             border: 2px solid grey;
@@ -40,74 +40,86 @@
             box-shadow: cadetblue;
             margin: 10px;
         }
-        
     </style>
 
     <script src="./script/jquery.js"></script>
 
     <script>
 
+        // Display the data in table format
         function displayTable(result1) {
             var str = "<table border=2 solid black><tr class='tableheader'><th>Id</th><th>Name</th><th>Salary</th><th>Age</th></tr>"
 
-            for( p of result1) {
+            for (p of result1) {
                 str += `<tr><td>${p.id}</td><td>${p.employee_name}</td><td>${p.employee_salary}</td><td>${p.employee_age}</td></tr>`;
             }
 
             str += "</table>";
+            // rendering the content on the mydiv id 
             $("#mydiv").html(str);
         }
 
-        function displaydata(ob)
-        {
-            var str=`userId : ${ob.data.id} <br> Employee Name : ${ob.data.employee_name} <br> Employee Age: ${ob.data.employee_age} <br> Employee Salary : ${ob.data.employee_salary}`
+        function displaydata(ob) {
+            var str = `userId : ${ob.data.id} <br> Employee Name : ${ob.data.employee_name} <br> Employee Age: ${ob.data.employee_age} <br> Employee Salary : ${ob.data.employee_salary}`
             $('#onepost').html(str);
         }
 
-        function sendRequest()
-        {
+        // send request for accessing the specified employee from the json data
+        function sendRequest() {
+            // Getting the id value from the dropdown list
             var id = $('#id option:selected').val();
+            // debug
             console.log(id);
+
+            // AJAX request for fetching data
             $.ajax({
-                url : "https://dummy.restapiexample.com/api/v1/employee/"+id,
+                // url for the accessing only one employee using id
+                url: "https://dummy.restapiexample.com/api/v1/employee/" + id,
                 type: 'GET',
-                success:function(result){
+                success: function (result) {
+                    // calliing the display data function
                     displaydata(result);
                 },
-                error:function(error)
-                {
+                error: function (error) {
                     console.log(error)
                 }
             }
-            )      
+            )
         }
 
-        function displayDropdown(result)
-        {
+        // function for displaying the dropdown
+        function displayDropdown(result) {
             var str = "<select id='id' name='id'>"
-            
-                for(var p of result.data)
-                {
-                    console.log("In dropdownLIst")
-                    str += `<option value='${p.id}'>${p.id}</option>`
-                }
-            str+= "</select>"
+
+            // Iterating the data
+            for (var p of result.data) {
+                console.log("In dropdownLIst")
+                str += `<option value='${p.id}'>${p.id}</option>`
+            }
+            str += "</select>"
+            // displaying the content of dropdown 
             $('#dropdown').html(str);
 
-            $('#id').change(function(){
+            // Applying the change event on the dropdown value changing
+            $('#id').change(function () {
                 sendRequest(result)
             })
         }
 
+        // For loading the JQuery 
         $(document).ready(function () {
-
-            $('#btn').click(function(){
+            // assigning the click event on the button
+            $('#btn').click(function () {
+                // AJAX request for for getting the data from the URL
                 $.ajax({
                     url: "https://dummy.restapiexample.com/api/v1/employees",
                     type: "GET",
-                    success: function(result) {
+                    success: function (result) {
+                        // For debug
                         console.log(result.data)
+                        // method displaying the incoming data
                         displayTable(result.data);
+                        // method for displaying the dropdown
                         displayDropdown(result);
                     },
                     error: function (err) {
@@ -126,10 +138,13 @@
     <header>
         <h1>AJAX using JQuery</h1>
     </header>
+    <!-- button for getting the data , assigning the event for button in JQuery -->
     <button name="btn" id="btn">Get Data</button>
+    <!-- tag for displaying the data through jQUERY-->
     <div id="dropdown"></div>
     <div id="onepost" style="margin: 10px;"></div>
     <div id="mydiv"></div>
+
     <footer>@copyrights</footer>
 
 </body>
